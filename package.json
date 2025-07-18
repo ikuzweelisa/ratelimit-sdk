@@ -1,0 +1,29 @@
+{
+  "name": "ratelimit-js",
+  "version": "0.0.0",
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest",
+    "clean": "rm -rf .dist && rm -rf node_modules && rm -rf pnpm-lock.yaml"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.14",
+    "tsdown": "^0.12.9",
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4",
+    "next": "15.4.1",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "require": "./.dist/index.cjs",
+      "import": "./.dist/index.js"
+    },
+    "./utils": {
+      "require": "./.dist/utils.cjs",
+      "import": "./.dist/utils.js"
+    }
+  }
+}
