@@ -1,6 +1,6 @@
 # ratelimit-js
 
-A Minimal, Flexible, and Fast Rate Limiter for JavaScript/TypeScript applications.
+A Minimal and Flexible Rate Limiter for JavaScript/TypeScript applications.
 
 ```bash
 pnpm add ratelimit-js
@@ -8,7 +8,7 @@ pnpm add ratelimit-js
 
 ## Usage
 
-#### Using ioredis
+#### Using ioredis or iovalkey
 
 ```typescript
 import { Ratelimit } from "ratelimit-js";
@@ -91,4 +91,4 @@ console.log(result);
 
 ## License
 
-MIT
+MIT [license](https://github.com/ikuzweelisa/ratelimit-sdk)

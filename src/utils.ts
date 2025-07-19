@@ -1,12 +1,28 @@
 import type { KV } from "./types";
 
+/**
+ * A Simple Local KV Store.
+ * @example
+ * ```typescript
+ * const kv = new LocalKV();
+ * await kv.set("key", "value");
+ * const value = await kv.get("key");
+ * console.log(value);
+ * ```
+ */
 export class LocalKV implements KV {
   private readonly store: Map<string, string> = new Map();
   private readonly expirations: Map<string, NodeJS.Timeout> = new Map();
   async get(key: string): Promise<string | null> {
     return this.store.has(key) ? this.store.get(key)! : null;
   }
-
+  /**
+   * Set the value of a key.
+   * @param key - The key to set.
+   * @param value - The value to set.
+   * @param options - The options for the key.
+   * @returns The result of the operation.
+   */
   async set(
     key: string,
     value: string,
@@ -19,6 +35,12 @@ export class LocalKV implements KV {
 
     return true;
   }
+  /**
+   * Increment the value of a key by a given amount.
+   * @param key - The key to increment.
+   * @param increment - The amount to increment.
+   * @returns The result of the operation.
+   */
   async incrby(key: string, increment: number): Promise<number> {
     const current = this.store.get(key) ?? "0";
     const next = parseInt(current) + increment;
@@ -26,10 +48,21 @@ export class LocalKV implements KV {
     return next;
   }
 
+  /**
+   * Increment the value of a key by 1.
+   * @param key - The key to increment.
+   * @returns The result of the operation.
+   */
   async incr(key: string): Promise<number> {
     return this.incrby(key, 1);
   }
 
+  /**
+   * Set the expiration time of a key in milliseconds.
+   * @param key - The key to set the expiration time for.
+   * @param milliseconds - The expiration time in milliseconds.
+   * @returns The result of the operation.
+   */
   async pexpire(key: string, milliseconds: number): Promise<number> {
     if (!this.store.has(key)) {
       return 0;
@@ -39,6 +72,12 @@ export class LocalKV implements KV {
     return 1;
   }
 
+  /**
+   * Get the values of multiple fields from a hash.
+   * @param key - The key of the hash.
+   * @param fields - The fields to get.
+   * @returns The values of the fields.
+   */
   async hmget(key: string, fields: string[]): Promise<string[]> {
     if (!this.store.has(key)) {
       return fields.map(() => "");
@@ -54,6 +93,12 @@ export class LocalKV implements KV {
     }
   }
 
+  /**
+   * Set the values of multiple fields in a hash.
+   * @param key - The key of the hash.
+   * @param fields - The fields to set.
+   * @returns The result of the operation.
+   */
   async hmset(key: string, fields: Record<string, string>): Promise<unknown> {
     const existing = this.store.has(key)
       ? JSON.parse(this.store.get(key) || "{}")
@@ -63,6 +108,12 @@ export class LocalKV implements KV {
     return true;
   }
 
+  /**
+   * Set the expiration time of a key in milliseconds.
+   * @param key - The key to set the expiration time for.
+   * @param milliseconds - The expiration time in milliseconds.
+   * @returns The result of the operation.
+   */
   private setExpiration(key: string, milliseconds: number): void {
     if (this.expirations.has(key)) {
       clearTimeout(this.expirations.get(key)!);
@@ -78,4 +129,8 @@ export class LocalKV implements KV {
   }
 }
 
+/**
+ * Create a new local KV store.
+ * @returns A new instance of the LocalKV class.
+ */
 export const createLocalKv = () => new LocalKV();

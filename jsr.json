@@ -1,0 +1,12 @@
+{
+  "name": "@ikuzweelisa/ratelimit-js",
+  "version": "0.0.0",
+  "exports": {
+    ".": "./src/index.ts",
+    "./utils": "./src/utils.ts"
+  },
+  "publish": {
+    "include": ["src/", "README.md", "LICENCE"],
+    "exclude": ["src/tests/", "src/**/*.test.ts", "src/**/*.spec.ts"]
+  }
+}
