@@ -1,5 +1,7 @@
 import type { KV } from "./types";
 
+type Timeout = ReturnType<typeof setTimeout>;
+
 /**
  * A Simple Local KV Store.
  * @example
@@ -12,7 +14,7 @@ import type { KV } from "./types";
  */
 export class LocalKV implements KV {
   private readonly store: Map<string, string> = new Map();
-  private readonly expirations: Map<string, NodeJS.Timeout> = new Map();
+  private readonly expirations: Map<string, Timeout> = new Map();
   async get(key: string): Promise<string | null> {
     return this.store.has(key) ? this.store.get(key)! : null;
   }
@@ -120,7 +122,7 @@ export class LocalKV implements KV {
       this.expirations.delete(key);
     }
 
-    const timeout = setTimeout(() => {
+    const timeout: Timeout = setTimeout(() => {
       this.store.delete(key);
       this.expirations.delete(key);
     }, milliseconds);
@@ -133,4 +135,4 @@ export class LocalKV implements KV {
  * Create a new local KV store.
  * @returns A new instance of the LocalKV class.
  */
-export const createLocalKv = () => new LocalKV();
+export const createLocalKv: () => LocalKV = () => new LocalKV();

@@ -1,6 +1,8 @@
 {
-  "name": "@ikuzweelisa/ratelimit-js",
-  "version": "0.0.0",
+  "name": "@ikuzweelisa/ratelimit-sdk",
+  "description": "A Minimal And Flexible Rate Limiter for TypeScript and JavaScript",
+  "license": "MIT",
+  "version": "0.5.1",
   "exports": {
     ".": "./src/index.ts",
     "./utils": "./src/utils.ts"

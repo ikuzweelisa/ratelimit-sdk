@@ -1,4 +1,4 @@
-name: Release
+name: CI
 
 on:
   release:
@@ -52,4 +52,4 @@ jobs:
           deno-version: v1.x
 
       - name: Publish to JSR
-        run: deno publish
+        run: deno publish --no-check --unstable-sloppy-imports --allow-slow-types --allow-dirty

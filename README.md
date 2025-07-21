@@ -3,7 +3,7 @@
 A Minimal and Flexible Rate Limiter for JavaScript/TypeScript applications.
 
 ```bash
-pnpm add ratelimit-js
+pnpm add ratelimit-sdk
 ```
 
 ## Usage
@@ -11,7 +11,7 @@ pnpm add ratelimit-js
 #### Using ioredis or iovalkey
 
 ```typescript
-import { Ratelimit } from "ratelimit-js";
+import { Ratelimit } from "ratelimit-sdk";
 import Redis from "ioredis";
 
 const redisClient = new Redis("redis://localhost:6379");
@@ -28,7 +28,7 @@ const result = await ratelimiter.limit("user-123");
 #### Using node-redis
 
 ```typescript
-import { Ratelimit } from "ratelimit-js";
+import { Ratelimit } from "ratelimit-sdk";
 import { createClient } from "redis";
 
 const redisClient = createClient({
@@ -50,7 +50,7 @@ console.log(result);
 #### Using Upstash Redis
 
 ```typescript
-import { Ratelimit } from "ratelimit-js";
+import { Ratelimit } from "ratelimit-sdk";
 import { Redis } from "@upstash/redis";
 
 const ratelimiter = new Ratelimit("api-ratelimiter", {
@@ -66,8 +66,8 @@ console.log(result);
 ### Using Memory
 
 ```typescript
-import { Ratelimit } from "ratelimit-js";
-import { createLocalKv } from "ratelimit-js/utils";
+  import { Ratelimit } from "ratelimit-sdk";
+import { createLocalKv } from "ratelimit-sdk/utils";
 
 const localKV = createLocalKv();
 
