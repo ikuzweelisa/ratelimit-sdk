@@ -1,3 +1,23 @@
+/**
+ * This module contains the Ratelimit class.
+ * @example
+ * ```typescript
+ * import { Ratelimit } from "ratelimit-sdk";
+ * 
+ * async function main() {
+ *   const ratelimiter = new Ratelimit("api", {
+ *     kv: redisClient,
+ *     limiter: Ratelimit.fixedWindow(50, "10 s"), // 50 requests per 10 seconds
+ *   });
+ *   const userId = "user-123";
+ *   const result = await ratelimiter.limit(userId);
+ *   console.log(result);
+ * }
+ * 
+ * void main();
+ * ```
+ * @packageDocumentation
+ */
 import { ms } from "./internal";
 import type {
   Context,
@@ -42,12 +62,16 @@ export class Ratelimit<T extends KV> {
    * @returns The response from the rate limiter.
    * @example
    * ```typescript
-   * const ratelimiter = new Ratelimit("api", {
-   *   kv: redisClient,
-   *   limiter: Ratelimit.fixedWindow(50, "10 s"), // 50 requests per 10 seconds
-   * });
-   * const userId = "user-123";
-   * const result = await ratelimiter.limit(userId);
+   * async function main() {
+   *   const ratelimiter = new Ratelimit("api", {
+   *     kv: redisClient,
+   *     limiter: Ratelimit.fixedWindow(50, "10 s"), // 50 requests per 10 seconds
+   *   });
+   *   const userId = "user-123";
+   *   const result = await ratelimiter.limit(userId);
+   * }
+   * 
+   * void main();
    * ```
    */
   public limit = async (identifier: string): Promise<RatelimitResponse> => {

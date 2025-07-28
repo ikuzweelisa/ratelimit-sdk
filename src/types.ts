@@ -1,3 +1,11 @@
+/**
+ * This module contains the types for the ratelimit-sdk.
+ * @packageDocumentation
+ */
+
+/**
+ * Any  Key-Value store.
+ */
 export type KV = {
   /**
    * Get the value of a key.

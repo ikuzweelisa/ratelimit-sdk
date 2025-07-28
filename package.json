@@ -14,7 +14,7 @@
     "rate limiter",
     "ratelimit",
     "node-ratelimiter",
-    "rate limit js"
+    "ratelimit-sdk"
   ],
   "bugs": {
     "url": "https://github.com/ikuzweelisa/ratelimit-sdk/issues"
@@ -46,6 +46,6 @@
     ".dist/",
     "README.md",
     "package.json",
-    "LICENCE"
+    "LICENSE"
   ]
 }

@@ -1,3 +1,7 @@
+/**
+ * This module contains internal functions for the ratelimit-sdk.
+ * @packageDocumentation
+ */
 import type { Duration, Unit } from "./types";
 
 export function ms(d: Duration): number {

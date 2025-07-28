@@ -1,12 +1,18 @@
-# ratelimit-js
+# ratelimit-sdk
 
 A Minimal and Flexible Rate Limiter for JavaScript/TypeScript applications.
+
+[![npm (scoped)](https://img.shields.io/npm/v/ratelimit-sdk)](https://www.npmjs.com/package/ratelimit-sdk)
+
+## Installation
 
 ```bash
 pnpm add ratelimit-sdk
 ```
 
 ## Usage
+
+> BYOK(Bring Your Own Key-Value Store) [Redis](https://redis.io/),[Valkey](https://valkey.io/),[Upstash](https://upstash.com/),memory,etc.
 
 #### Using ioredis or iovalkey
 
@@ -63,10 +69,10 @@ const result = await ratelimiter.limit(userId);
 console.log(result);
 ```
 
-### Using Memory
+#### Using Memory
 
 ```typescript
-  import { Ratelimit } from "ratelimit-sdk";
+import { Ratelimit } from "ratelimit-sdk";
 import { createLocalKv } from "ratelimit-sdk/utils";
 
 const localKV = createLocalKv();

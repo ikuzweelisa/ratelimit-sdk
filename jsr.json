@@ -8,7 +8,7 @@
     "./utils": "./src/utils.ts"
   },
   "publish": {
-    "include": ["src/", "README.md", "LICENCE"],
+    "include": ["src/", "README.md", "LICENSE"],
     "exclude": ["src/tests/", "src/**/*.test.ts", "src/**/*.spec.ts"]
   }
 }

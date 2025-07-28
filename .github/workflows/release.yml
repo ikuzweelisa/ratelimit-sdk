@@ -44,12 +44,6 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup Deno
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
-
-      - name: Publish to JSR
-        run: deno publish --no-check --unstable-sloppy-imports --allow-slow-types --allow-dirty
+      - uses: actions/checkout@v4
+      - name: Publish package
+        run: npx jsr publish --no-check --unstable-sloppy-imports --allow-slow-types --allow-dirty

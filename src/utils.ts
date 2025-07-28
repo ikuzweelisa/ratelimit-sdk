@@ -1,3 +1,21 @@
+/**
+ * This module contains utility functions like a local KV store.
+ * @example
+ * ```typescript
+ * import { createLocalKv } from "ratelimit-sdk/utils";
+ * 
+ * async function main() {
+ *   const kv = createLocalKv();
+ *   await kv.set("key", "value");
+ *   const value = await kv.get("key");
+ *   console.log(value);
+ * }
+ * 
+ * void main();
+ * ```
+ * @packageDocumentation
+ */
+
 import type { KV } from "./types";
 
 type Timeout = ReturnType<typeof setTimeout>;
@@ -6,10 +24,14 @@ type Timeout = ReturnType<typeof setTimeout>;
  * A Simple Local KV Store.
  * @example
  * ```typescript
- * const kv = new LocalKV();
- * await kv.set("key", "value");
- * const value = await kv.get("key");
- * console.log(value);
+ * async function main() {
+ *   const kv = new LocalKV();
+ *   await kv.set("key", "value");
+ *   const value = await kv.get("key");
+ *   console.log(value);
+ * }
+ * 
+ * void main();
  * ```
  */
 export class LocalKV implements KV {
