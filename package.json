@@ -3,6 +3,7 @@
   "version": "0.5.1",
   "type": "module",
   "access": "public",
+  "types": "./dist/index.d.ts",
   "author": "IKUZWE Elisa <shemaelyssa@gmail.com>",
   "description": "A Minimal And Flexible Rate Limiter for TypeScript and JavaScript",
   "repository": {
@@ -11,7 +12,7 @@
   },
   "homepage": "https://github.com/ikuzweelisa/ratelimit-sdk",
   "keywords": [
-    "rate limiter",
+    "ratelimit-js",
     "ratelimit",
     "node-ratelimiter",
     "ratelimit-sdk"

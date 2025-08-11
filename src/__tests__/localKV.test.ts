@@ -1,8 +1,8 @@
 import { describe, expect, it, beforeEach, vi, afterEach } from "vitest";
-import { createLocalKv } from "../utils";
+import { createLocalKv, LocalKV } from "../utils";
 
 describe("LocalKV", () => {
-  let kv: ReturnType<typeof createLocalKv>;
+  let kv: LocalKV;
 
   beforeEach(() => {
     kv = createLocalKv();
@@ -11,6 +11,7 @@ describe("LocalKV", () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    kv.clear();
   });
 
   it("should store and retrieve values", async () => {
@@ -26,12 +27,9 @@ describe("LocalKV", () => {
 
   it("should handle key expiration", async () => {
     await kv.set("expiring", "value", { px: 1000 });
-
     expect(await kv.get("expiring")).toBe("value");
-
     vi.advanceTimersByTime(500);
     expect(await kv.get("expiring")).toBe("value");
-
     vi.advanceTimersByTime(600);
     expect(await kv.get("expiring")).toBeNull();
   });
@@ -49,7 +47,6 @@ describe("LocalKV", () => {
   it("should handle incr method", async () => {
     const result1 = await kv.incr("counter");
     expect(result1).toBe(1);
-
     const result2 = await kv.incr("counter");
     expect(result2).toBe(2);
   });
@@ -57,7 +54,6 @@ describe("LocalKV", () => {
   it("should handle incrby method", async () => {
     const result1 = await kv.incrby("counter2", 5);
     expect(result1).toBe(5);
-
     const result2 = await kv.incrby("counter2", 3);
     expect(result2).toBe(8);
   });
@@ -72,22 +68,16 @@ describe("LocalKV", () => {
   it("should update existing hash fields with hmset", async () => {
     await kv.hmset("hash2", { field1: "original", field2: "original" });
     await kv.hmset("hash2", { field1: "updated" });
-
     const values = await kv.hmget("hash2", ["field1", "field2"]);
     expect(values).toEqual(["updated", "original"]);
   });
 
   it("should reset expiration when updating a key", async () => {
     await kv.set("key3", "original", { px: 1000 });
-
     vi.advanceTimersByTime(500);
-
     await kv.set("key3", "updated", { px: 2000 });
-
     vi.advanceTimersByTime(1000);
-
     expect(await kv.get("key3")).toBe("updated");
-
     vi.advanceTimersByTime(1100);
     expect(await kv.get("key3")).toBeNull();
   });

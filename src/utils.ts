@@ -3,14 +3,14 @@
  * @example
  * ```typescript
  * import { createLocalKv } from "ratelimit-sdk/utils";
- * 
+ *
  * async function main() {
  *   const kv = createLocalKv();
  *   await kv.set("key", "value");
  *   const value = await kv.get("key");
  *   console.log(value);
  * }
- * 
+ *
  * void main();
  * ```
  * @packageDocumentation
@@ -30,13 +30,16 @@ type Timeout = ReturnType<typeof setTimeout>;
  *   const value = await kv.get("key");
  *   console.log(value);
  * }
- * 
+ *
  * void main();
  * ```
  */
 export class LocalKV implements KV {
-  private readonly store: Map<string, string> = new Map();
-  private readonly expirations: Map<string, Timeout> = new Map();
+  constructor(
+    private readonly store: Map<string, string> = new Map(),
+    private readonly expirations: Map<string, Timeout> = new Map()
+  ) {}
+
   async get(key: string): Promise<string | null> {
     return this.store.has(key) ? this.store.get(key)! : null;
   }
@@ -150,6 +153,15 @@ export class LocalKV implements KV {
     }, milliseconds);
 
     this.expirations.set(key, timeout);
+  }
+
+  /**
+   * Delete all keys from the store.
+   * @returns The result of the operation.
+   */
+  public async clear(): Promise<void> {
+    this.store.clear();
+    this.expirations.clear();
   }
 }
 
