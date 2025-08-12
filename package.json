@@ -3,9 +3,10 @@
   "version": "0.5.1",
   "type": "module",
   "access": "public",
-  "types": "./dist/index.d.ts",
   "author": "IKUZWE Elisa <shemaelyssa@gmail.com>",
   "description": "A Minimal And Flexible Rate Limiter for TypeScript and JavaScript",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/ikuzweelisa/ratelimit-sdk"
@@ -35,12 +36,14 @@
   "license": "MIT",
   "exports": {
     ".": {
-      "require": "./.dist/index.js",
-      "import": "./.dist/index.cjs"
+      "types": "./.dist/index.d.ts",
+      "import": "./.dist/index.js",
+      "require": "./.dist/index.cjs"
     },
     "./utils": {
-      "require": "./.dist/utils.js",
-      "import": "./.dist/utils.cjs"
+      "types": "./.dist/utils.d.ts",
+      "import": "./.dist/utils.js",
+      "require": "./.dist/utils.cjs"
     }
   },
   "files": [

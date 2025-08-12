@@ -24,7 +24,7 @@ const redisClient = new Redis("redis://localhost:6379");
 
 const ratelimiter = new Ratelimit("api", {
   kv: redisClient,
-  limiter: Ratelimit.fixedWindow(50, "10 s"), // 50 requests per 10 seconds
+  limiter: Ratelimit.fixedWindow(50, "10s"), // 50 requests per 10 seconds
 });
 
 // Use the rate limiter
@@ -44,7 +44,7 @@ await redisClient.connect();
 
 const ratelimiter = new Ratelimit("api", {
   kv: redisClient,
-  limiter: Ratelimit.fixedWindow(100, "1 m"), // 100 requests per minute
+  limiter: Ratelimit.fixedWindow(100, "1m"), // 100 requests per minute
 });
 
 // Use the rate limiter
@@ -61,7 +61,7 @@ import { Redis } from "@upstash/redis";
 
 const ratelimiter = new Ratelimit("api-ratelimiter", {
   kv: Redis.fromEnv(),
-  limiter: Ratelimit.fixedWindow(50, "10 s"), // 50 requests per 10 seconds
+  limiter: Ratelimit.fixedWindow(50, "10s"), // 50 requests per 10 seconds
 });
 
 const userId = "user-123";
@@ -79,7 +79,7 @@ const localKV = createLocalKv();
 
 const ratelimiter = new Ratelimit("api-ratelimiter", {
   kv: localKV,
-  limiter: Ratelimit.fixedWindow(5, "1 m"),
+  limiter: Ratelimit.fixedWindow(5, "1m"),
 });
 
 // Use the rate limiter

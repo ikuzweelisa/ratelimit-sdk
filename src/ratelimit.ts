@@ -1,21 +1,5 @@
 /**
  * This module contains the Ratelimit class.
- * @example
- * ```typescript
- * import { Ratelimit } from "ratelimit-sdk";
- *
- * async function main() {
- *   const ratelimiter = new Ratelimit("api", {
- *     kv: redisClient,
- *     limiter: Ratelimit.fixedWindow(50, "10 s"), // 50 requests per 10 seconds
- *   });
- *   const userId = "user-123";
- *   const result = await ratelimiter.limit(userId);
- *   console.log(result);
- * }
- *
- * void main();
- * ```
  * @packageDocumentation
  */
 import { ms } from "./internal";
@@ -35,14 +19,14 @@ import type {
  * @returns A new instance of the Ratelimit class.
  * @example
  * ```typescript
- * import { Ratelimit } from "ratelimit-js";
+ * import { Ratelimit } from "ratelimit-sdk";
  * import Redis from "ioredis";
  *
  * const redisClient = new Redis("redis://localhost:6379");
  *
  * const ratelimiter = new Ratelimit("api", {
  *   kv: redisClient,
- *   limiter: Ratelimit.fixedWindow(50, "10 s"), // 50 requests per 10 seconds
+ *   limiter: Ratelimit.slidingWindow(50, "10s"), // 50 requests per 10 seconds
  * });
  * ```
  */
@@ -62,16 +46,8 @@ export class Ratelimit<T extends KV> {
    * @returns The response from the rate limiter.
    * @example
    * ```typescript
-   * async function main() {
-   *   const ratelimiter = new Ratelimit("api", {
-   *     kv: redisClient,
-   *     limiter: Ratelimit.fixedWindow(50, "10 s"), // 50 requests per 10 seconds
-   *   });
    *   const userId = "user-123";
    *   const result = await ratelimiter.limit(userId);
-   * }
-   *
-   * void main();
    * ```
    */
   public limit = async (identifier: string): Promise<RatelimitResponse> => {
@@ -122,14 +98,16 @@ export class Ratelimit<T extends KV> {
       const previousWindow = currentWindow - 1;
       const currentBucket = [ctx.name, identifier, currentWindow].join(":");
       const previousBucket = [ctx.name, identifier, previousWindow].join(":");
-      const [currentCount, previousCount] = await Promise.all([
-        ctx.kv.get(currentBucket).then((v) => parseInt(v ?? "0")),
-        ctx.kv.get(previousBucket).then((v) => parseInt(v ?? "0")),
-      ]);
+      const current = await ctx.kv.incr(currentBucket);
+      if (current === 1) {
+        await ctx.kv.pexpire(currentBucket, windowDuration);
+      }
+      const previousCount = await ctx.kv
+        .get(previousBucket)
+        .then((v) => parseInt(v ?? "0"));
       const percentage = (now % windowDuration) / windowDuration;
-      const average = previousCount * (1 - percentage) + currentCount;
-      const remaining = Number((tokens - average).toFixed(1));
-      if (currentCount >= tokens) {
+      const average = previousCount * (1 - percentage) + current;
+      if (average > tokens) {
         return {
           success: false,
           limit: tokens,
@@ -137,10 +115,8 @@ export class Ratelimit<T extends KV> {
           reset: (currentWindow + 1) * windowDuration,
         };
       }
-      const current = await ctx.kv.incr(currentBucket);
-      if (current === 1) {
-        await ctx.kv.pexpire(currentBucket, windowDuration);
-      }
+
+      const remaining = Number((tokens - average).toFixed(1));
       return {
         success: true,
         limit: tokens,

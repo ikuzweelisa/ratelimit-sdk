@@ -85,12 +85,18 @@ export interface RateLimitOptions<T extends KV> {
   limiter: Ratelimiter;
 }
 
+type Days = "days" | "day" | "d";
+type Hours = "hours" | "hour" | "hrs" | "hr" | "h";
+type Minutes = "minutes" | "minute" | "mins" | "min" | "m";
+type Seconds = "seconds" | "second" | "secs" | "sec" | "s";
+type Milliseconds = "milliseconds" | "millisecond" | "ms";
+
 /**
  * The unit of the duration.
  */
-export type Unit = "ms" | "s" | "m" | "h" | "d";
+export type Unit = Days | Hours | Minutes | Seconds | Milliseconds;
 
 /**
  * The duration of the window.
  */
-export type Duration = `${number} ${Unit}`;
+export type Duration = `${number}${Unit}`;

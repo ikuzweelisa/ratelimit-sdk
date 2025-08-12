@@ -4,22 +4,61 @@
  */
 import type { Duration, Unit } from "./types";
 
-export function ms(d: Duration): number {
-  const [timeString, unit] = d.split(" ") as [string, Unit];
-  const time = parseFloat(timeString);
+const s = 1000;
+const m = s * 60;
+const h = m * 60;
+const d = h * 24;
+
+/**
+ * Convert a duration string to milliseconds.
+ * @param duration - The duration string to convert.
+ * @returns The duration in milliseconds.
+ */
+export function ms(duration: Duration): number {
+  if (typeof duration !== "string" || duration.length === 0) {
+    throw new Error(`Invalid duration provided: ${JSON.stringify(duration)}`);
+  }
+  const input = duration.trim();
+  const match =
+    /^(?<value>-?(?:\d+(?:\.\d+)?|\.\d+))\s*(?<unit>milliseconds?|msecs?|msec|ms|seconds?|secs?|sec|s|minutes?|mins?|min|m|hours?|hrs?|hr|h|days?|day|d)?$/i.exec(
+      input
+    );
+  if (!match?.groups?.value) return NaN;
+  const { value, unit: rawUnit } = match.groups as {
+    value: string;
+    unit?: string;
+  };
+
+  const time = Number.parseFloat(value);
+  const unit = rawUnit?.toLowerCase() as Unit | undefined;
   switch (unit) {
-    case "ms":
+    case "millisecond":
+    case "milliseconds":
       return time;
     case "s":
-      return time * 1000;
+    case "second":
+    case "seconds":
+    case "secs":
+    case "sec":
+      return s * time;
     case "m":
-      return time * 1000 * 60;
+    case "minute":
+    case "minutes":
+    case "mins":
+    case "min":
+      return m * time;
     case "h":
-      return time * 1000 * 60 * 60;
+    case "hour":
+    case "hours":
+    case "hrs":
+    case "hr":
+      return h * time;
     case "d":
-      return time * 1000 * 60 * 60 * 24;
+    case "day":
+    case "days":
+      return d * time;
     default:
-      throw new Error(`Unable to parse window size: ${d}`);
+      throw new Error(`Unable to parse duration ${JSON.stringify(duration)}`);
   }
 }
 
