@@ -27,6 +27,17 @@ export type KV = {
    * Set the expiration time of a key in milliseconds.
    */
   pexpire(key: string, milliseconds: number, ...args: any[]): Promise<number>;
+  
+   /**
+    * Get the value of a hash field.
+    */
+   hmget(key: string, ...fields: string[]): Promise<string[]>
+
+  /**
+   * Set the value of a hash field.
+   */
+  hmset(key: string, fields: Record<string, string>): Promise<unknown>
+   
 };
 
 /**
@@ -91,10 +102,11 @@ type Minutes = "minutes" | "minute" | "mins" | "min" | "m";
 type Seconds = "seconds" | "second" | "secs" | "sec" | "s";
 type Milliseconds = "milliseconds" | "millisecond" | "ms";
 
+
 /**
  * The unit of the duration.
  */
-export type Unit = Days | Hours | Minutes | Seconds | Milliseconds;
+ export type Unit = Days | Hours | Minutes | Seconds | Milliseconds;
 
 /**
  * The duration of the window.

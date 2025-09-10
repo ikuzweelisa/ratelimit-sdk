@@ -34,6 +34,7 @@ export function ms(duration: Duration): number {
   switch (unit) {
     case "millisecond":
     case "milliseconds":
+    case "ms":
       return time;
     case "s":
     case "second":

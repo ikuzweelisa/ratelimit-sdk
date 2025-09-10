@@ -61,14 +61,14 @@ describe("LocalKV", () => {
   it("should handle hmset and hmget methods", async () => {
     await kv.hmset("hash1", { field1: "value1", field2: "value2" });
 
-    const values = await kv.hmget("hash1", ["field1", "field2", "nonexistent"]);
+    const values = await kv.hmget("hash1", "field1", "field2", "nonexistent");
     expect(values).toEqual(["value1", "value2", ""]);
   });
 
   it("should update existing hash fields with hmset", async () => {
     await kv.hmset("hash2", { field1: "original", field2: "original" });
     await kv.hmset("hash2", { field1: "updated" });
-    const values = await kv.hmget("hash2", ["field1", "field2"]);
+    const values = await kv.hmget("hash2", "field1", "field2");
     expect(values).toEqual(["updated", "original"]);
   });
 

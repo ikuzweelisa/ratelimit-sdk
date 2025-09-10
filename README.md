@@ -1,6 +1,6 @@
 # ratelimit-sdk
 
-A Minimal and Flexible Rate Limiter for JavaScript/TypeScript applications.
+Generic Rate Limiter for JavaScript/TypeScript.
 
 [![npm (scoped)](https://img.shields.io/npm/v/ratelimit-sdk)](https://www.npmjs.com/package/ratelimit-sdk)
 

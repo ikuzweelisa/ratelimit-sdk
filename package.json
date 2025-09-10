@@ -4,7 +4,7 @@
   "type": "module",
   "access": "public",
   "author": "IKUZWE Elisa <shemaelyssa@gmail.com>",
-  "description": "A Minimal And Flexible Rate Limiter for TypeScript and JavaScript",
+  "description": "Generic Rate Limiter for JavaScript/TypeScript",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "repository": {

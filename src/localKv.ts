@@ -95,7 +95,7 @@ class LocalKV implements KV {
    * @param fields - The fields to get.
    * @returns The values of the fields.
    */
-  async hmget(key: string, fields: string[]): Promise<string[]> {
+  async hmget(key: string, ...fields: string[]): Promise<string[]> {
     if (!this.store.has(key)) {
       return fields.map(() => "");
     }
@@ -122,11 +122,11 @@ class LocalKV implements KV {
       try {
         existing = JSON.parse(this.store.get(key) || "{}");
       } catch {
-        // If existing data is corrupted, start fresh
         existing = {};
       }
     }
 
+    
     this.store.set(key, JSON.stringify({ ...existing, ...fields }));
     return true;
   }
