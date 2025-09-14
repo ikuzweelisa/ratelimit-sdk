@@ -1,12 +1,13 @@
 import { describe, expect, it, beforeEach, vi, afterEach } from "vitest";
 import { createLocalKv, LocalKV } from "../utils";
+import { ms } from "../internal";
 
 describe("LocalKV", () => {
   let kv: LocalKV;
 
   beforeEach(() => {
-    kv = createLocalKv();
     vi.useFakeTimers();
+    kv = createLocalKv();
   });
 
   afterEach(() => {
@@ -26,21 +27,21 @@ describe("LocalKV", () => {
   });
 
   it("should handle key expiration", async () => {
-    await kv.set("expiring", "value", { px: 1000 });
+    await kv.set("expiring", "value", { px: ms("1s") });
     expect(await kv.get("expiring")).toBe("value");
-    vi.advanceTimersByTime(500);
+    vi.advanceTimersByTime(ms("500ms"));
     expect(await kv.get("expiring")).toBe("value");
-    vi.advanceTimersByTime(600);
+    vi.advanceTimersByTime(ms("600ms"));
     expect(await kv.get("expiring")).toBeNull();
   });
 
   it("should handle pexpire method", async () => {
     await kv.set("key2", "value2");
-    await kv.pexpire("key2", 1000);
+    await kv.pexpire("key2", ms("1s"));
 
     expect(await kv.get("key2")).toBe("value2");
 
-    vi.advanceTimersByTime(1100);
+    vi.advanceTimersByTime(ms("1.1s"));
     expect(await kv.get("key2")).toBeNull();
   });
 
@@ -73,12 +74,19 @@ describe("LocalKV", () => {
   });
 
   it("should reset expiration when updating a key", async () => {
-    await kv.set("key3", "original", { px: 1000 });
-    vi.advanceTimersByTime(500);
-    await kv.set("key3", "updated", { px: 2000 });
-    vi.advanceTimersByTime(1000);
+    await kv.set("key3", "original", { px: ms("1s") });
+    vi.advanceTimersByTime(ms("500ms"));
+    await kv.set("key3", "updated", { px: ms("2s") });
+    vi.advanceTimersByTime(ms("1s"));
     expect(await kv.get("key3")).toBe("updated");
-    vi.advanceTimersByTime(1100);
+    vi.advanceTimersByTime(ms("1.1s"));
     expect(await kv.get("key3")).toBeNull();
   });
+
+  it("should handle key deletion",async ()=>{
+    const key = "key4";
+    await kv.set(key,"value");
+    await kv.del(key);
+    expect(await kv.get(key)).toBeNull();
+  })
 });

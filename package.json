@@ -5,8 +5,8 @@
   "access": "public",
   "author": "IKUZWE Elisa <shemaelyssa@gmail.com>",
   "description": "Generic Rate Limiter for JavaScript/TypeScript",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./.dist/index.js",
+  "types": "./.dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/ikuzweelisa/ratelimit-sdk"
@@ -29,7 +29,6 @@
   },
   "devDependencies": {
     "@types/node": "^24.0.14",
-    "tsdown": "^0.12.9",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
   },
@@ -51,5 +50,8 @@
     "README.md",
     "package.json",
     "LICENSE"
-  ]
+  ],
+  "dependencies": {
+    "tsdown": "^0.15.1"
+  }
 }

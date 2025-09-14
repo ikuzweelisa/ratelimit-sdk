@@ -14,8 +14,8 @@ import type {
 
 /**
  * Ratelimiter.
- * @param name - The name of the rate limiter.
- * @param config - The configuration for the rate limiter.
+ * @param namespace {string} - The namespace of the rate limiter.
+ * @param options - The configuration for the rate limiter.
  * @returns A new instance of the Ratelimit class.
  * @example
  * ```typescript
@@ -33,11 +33,11 @@ import type {
 export class Ratelimit<T extends KV> {
   private readonly kv: T;
   private readonly limiter: Ratelimiter;
-  private readonly namespace: string; 
+  private readonly namespace: string;
 
-  constructor(namespace: string, config: RateLimitOptions<T>) {
-    this.kv = config.kv;
-    this.limiter = config.limiter;
+  constructor(namespace: string, options: RateLimitOptions<T>) {
+    this.kv = options.kv;
+    this.limiter = options.limiter;
     this.namespace = namespace;
   }
   /**
@@ -51,7 +51,10 @@ export class Ratelimit<T extends KV> {
    * ```
    */
   public limit = async (identifier: string): Promise<RatelimitResponse> => {
-    return await this.limiter({ kv: this.kv, name: this.namespace }, identifier);
+    return await this.limiter(
+      { kv: this.kv, namespace: this.namespace },
+      identifier
+    );
   };
 
   /**
@@ -66,7 +69,7 @@ export class Ratelimit<T extends KV> {
     return async function (ctx: Context, identifier: string) {
       const now = Date.now();
       const bucket = Math.floor(now / windowDuration);
-      const key = [ctx.name, identifier, bucket].join(":");
+      const key = [ctx.namespace, identifier, bucket].join(":");
       const current = await ctx.kv.incr(key);
       if (current === 1) {
         await ctx.kv.pexpire(key, windowDuration);
@@ -82,7 +85,6 @@ export class Ratelimit<T extends KV> {
       };
     };
   }
-
   /**
    * Sliding window rate limiter.
    * @param tokens - The number of tokens to limit the request.
@@ -96,8 +98,12 @@ export class Ratelimit<T extends KV> {
       const now = Date.now();
       const currentWindow = Math.floor(now / windowDuration);
       const previousWindow = currentWindow - 1;
-      const currentBucket = [ctx.name, identifier, currentWindow].join(":");
-      const previousBucket = [ctx.name, identifier, previousWindow].join(":");
+      const currentBucket = [ctx.namespace, identifier, currentWindow].join(
+        ":"
+      );
+      const previousBucket = [ctx.namespace, identifier, previousWindow].join(
+        ":"
+      );
       const current = await ctx.kv.incr(currentBucket);
       if (current === 1) {
         await ctx.kv.pexpire(currentBucket, windowDuration);
@@ -115,7 +121,6 @@ export class Ratelimit<T extends KV> {
           reset: (currentWindow + 1) * windowDuration,
         };
       }
-
       const remaining = Number((tokens - average).toFixed(1));
       return {
         success: true,
@@ -131,7 +136,6 @@ export class Ratelimit<T extends KV> {
    * @param refillInterval The interval at which tokens are refilled.
    * @param maxTokens The maximum number of tokens.
    * @returns The rate limiter function.
-   * @see https://smudge.ai/blog/ratelimit-algorithms
    */
   static tokenBucket(
     refillRate: number,
@@ -141,28 +145,29 @@ export class Ratelimit<T extends KV> {
     const refillDuration = ms(refillInterval);
     return async function (ctx: Context, identifier: string) {
       const now = Date.now();
-      const bucket = Math.floor(now / refillDuration);
-      const key = [ctx.name, identifier, bucket].join(":");
+      const key = [ctx.namespace, identifier, "bucket"].join(":");
       const current = await ctx.kv.hmget(key, "tokens", "lastRefill");
-      const tokens = current?.at(0) ? parseInt(current[0]) : maxTokens;
-      const lastRefill = current?.at(1) ? parseInt(current[1]) : now;
+      const tokens = current[0] ? parseInt(current[0]) : maxTokens;
+      const lastRefill = current[1] ? parseInt(current[1]) : now;
       const timeSinceLastRefill = now - lastRefill;
       const tokensToAdd =
         Math.floor(timeSinceLastRefill / refillDuration) * refillRate;
       const newTokens = Math.min(maxTokens, tokens + tokensToAdd);
-      const success = newTokens > 0;
+      const success = newTokens >= 1;
+      const tokensToSet = success ? newTokens - 1 : newTokens;
       const refillDate = tokensToAdd > 0 ? now : lastRefill;
       await ctx.kv.hmset(key, {
-        tokens: newTokens.toString(),
+        tokens: tokensToSet.toString(),
         lastRefill: refillDate.toString(),
       });
-      await ctx.kv.pexpire(key, refillDuration);
-      const nextRefill = refillDate + refillDuration;
-      const reset = newTokens === 0 ? nextRefill : now;
+      await ctx.kv.pexpire(key, refillDuration * 2);
+      const remaining = Math.max(0, tokensToSet);
+      const reset = refillDate + refillDuration;
+
       return {
         success,
         limit: maxTokens,
-        remaining: maxTokens - newTokens,
+        remaining,
         reset,
       };
     };

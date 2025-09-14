@@ -13,7 +13,7 @@ const testCases: { input: Duration; expected: number }[] = [
   { input: "2hr", expected: 7200000 },
 ];
 
-describe("parse duration", () => {
+describe("Duration parser", () => {
   testCases.forEach(({ input, expected }) => {
     it(`should convert ${input} to ${expected}ms`, () => {
       expect(ms(input)).toBe(expected);

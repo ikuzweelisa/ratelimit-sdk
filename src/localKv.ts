@@ -126,7 +126,6 @@ class LocalKV implements KV {
       }
     }
 
-    
     this.store.set(key, JSON.stringify({ ...existing, ...fields }));
     return true;
   }
@@ -151,6 +150,14 @@ class LocalKV implements KV {
     this.expirations.set(key, timeout);
   }
 
+  public async del(...keys: string[]): Promise<number> {
+    const count = keys.length;
+    for (const key of keys) {
+      this.store.delete(key);
+      this.expirations.delete(key);
+    }
+    return count;
+  }
   public async clear(): Promise<void> {
     for (const timeout of this.expirations.values()) {
       clearTimeout(timeout);

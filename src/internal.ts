@@ -20,7 +20,7 @@ export function ms(duration: Duration): number {
   }
   const input = duration.trim();
   const match =
-    /^(?<value>-?(?:\d+(?:\.\d+)?|\.\d+))\s*(?<unit>milliseconds?|msecs?|msec|ms|seconds?|secs?|sec|s|minutes?|mins?|min|m|hours?|hrs?|hr|h|days?|day|d)?$/i.exec(
+    /^(?<value>-?(?:\d+(?:\.\d+)?|\.\d+))\s*(?<unit>milliseconds?|ms|seconds?|secs?|sec|s|minutes?|mins?|min|m|hours?|hrs?|hr|h|days?|day|d)?$/i.exec(
       input
     );
   if (!match?.groups?.value) return NaN;
