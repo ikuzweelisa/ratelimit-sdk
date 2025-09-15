@@ -1,6 +1,6 @@
 {
   "name": "@ikuzweelisa/ratelimit-sdk",
-  "description": "A Minimal And Flexible Rate Limiter for TypeScript and JavaScript",
+  "description": "Generic Limiter for TypeScript and JavaScript",
   "license": "MIT",
   "version": "0.5.1",
   "exports": {
@@ -9,6 +9,6 @@
   },
   "publish": {
     "include": ["src/", "README.md", "LICENSE"],
-    "exclude": ["src/tests/", "src/**/*.test.ts", "src/**/*.spec.ts"]
+    "exclude": ["src/__tests__", "src/**/*.test.ts", "src/**/*.spec.ts"]
   }
 }
