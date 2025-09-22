@@ -1,6 +1,6 @@
 {
   "name": "ratelimit-sdk",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "type": "module",
   "access": "public",
   "author": "IKUZWE Elisa <shemaelyssa@gmail.com>",
@@ -14,8 +14,8 @@
   "homepage": "https://github.com/ikuzweelisa/ratelimit-sdk",
   "keywords": [
     "ratelimit-js",
-    "ratelimit",
-    "node-ratelimiter",
+    "node-ratelimit",
+    "express-ratelimiter",
     "ratelimit-sdk"
   ],
   "bugs": {
@@ -24,25 +24,28 @@
   "scripts": {
     "build": "tsdown",
     "test": "vitest",
-    "clean": "rm -rf .dist && rm -rf node_modules && rm -rf pnpm-lock.yaml",
+    "clean": "rm -rf .dist && rm -rf node_modules",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^24.0.14",
     "typescript": "^5.8.3",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "tsdown": "^0.15.1"
   },
   "license": "MIT",
   "exports": {
     ".": {
       "types": "./.dist/index.d.ts",
       "import": "./.dist/index.js",
-      "require": "./.dist/index.cjs"
+      "require": "./.dist/index.cjs",
+      "default": "./.dist/index.js"
     },
     "./utils": {
       "types": "./.dist/utils.d.ts",
       "import": "./.dist/utils.js",
-      "require": "./.dist/utils.cjs"
+      "require": "./.dist/utils.cjs",
+      "default": "./.dist/utils.js"
     }
   },
   "files": [
@@ -50,8 +53,5 @@
     "README.md",
     "package.json",
     "LICENSE"
-  ],
-  "dependencies": {
-    "tsdown": "^0.15.1"
-  }
+  ]
 }

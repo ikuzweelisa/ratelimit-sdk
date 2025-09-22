@@ -2,7 +2,7 @@
   "name": "@ikuzweelisa/ratelimit-sdk",
   "description": "Generic Limiter for TypeScript and JavaScript",
   "license": "MIT",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "exports": {
     ".": "./src/index.ts",
     "./utils": "./src/utils.ts"
