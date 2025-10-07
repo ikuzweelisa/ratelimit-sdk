@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach, vi, afterEach } from "vitest";
-import { createLocalKv, LocalKV } from "../utils";
+import { createLocalKv, type LocalKV } from "../utils";
 import { ms } from "../internal";
 
 describe("LocalKV", () => {

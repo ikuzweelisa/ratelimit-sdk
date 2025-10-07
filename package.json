@@ -25,13 +25,16 @@
     "build": "tsdown",
     "test": "vitest",
     "clean": "rm -rf .dist && rm -rf node_modules",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "format": "biome format --write",
+    "lint": "biome lint --write"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.2.5",
     "@types/node": "^24.0.14",
+    "tsdown": "^0.15.1",
     "typescript": "^5.8.3",
-    "vitest": "^3.2.4",
-    "tsdown": "^0.15.1"
+    "vitest": "^3.2.4"
   },
   "license": "MIT",
   "exports": {

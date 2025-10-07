@@ -66,7 +66,7 @@ export class Ratelimit<T extends KV> {
    */
   static fixedWindow(tokens: number, window: Duration): Ratelimiter {
     const windowDuration = ms(window);
-    return async function (ctx: Context, identifier: string) {
+    return async (ctx: Context, identifier: string) => {
       const now = Date.now();
       const bucket = Math.floor(now / windowDuration);
       const key = [ctx.namespace, identifier, bucket].join(":");
@@ -94,7 +94,7 @@ export class Ratelimit<T extends KV> {
    */
   static slidingWindow(tokens: number, window: Duration): Ratelimiter {
     const windowDuration = ms(window);
-    return async function (ctx: Context, identifier: string) {
+    return async (ctx: Context, identifier: string) => {
       const now = Date.now();
       const currentWindow = Math.floor(now / windowDuration);
       const previousWindow = currentWindow - 1;
@@ -143,7 +143,7 @@ export class Ratelimit<T extends KV> {
     maxTokens: number
   ): Ratelimiter {
     const refillDuration = ms(refillInterval);
-    return async function (ctx: Context, identifier: string) {
+    return async (ctx: Context, identifier: string) => {
       const now = Date.now();
       const key = [ctx.namespace, identifier, "bucket"].join(":");
       const current = await ctx.kv.hmget(key, "tokens", "lastRefill");
